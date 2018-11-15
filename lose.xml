@@ -3,15 +3,15 @@
 <nta>
 	<declaration>// Place global declarations here.
 
-typedef int[1,2] counters;
-int active := 2; // number of counters still working; program is complete when this reaches 0
+typedef int[1,3] counters;
+int active := 3; // number of counters still working; program is complete when this reaches 0
 int n := 0;</declaration>
 	<template>
 		<name x="5" y="5">Counter</name>
 		<parameter>counters c</parameter>
 		<declaration>// Place local declarations here.
 int r;
-int k := 10;</declaration>
+int k := 3;</declaration>
 		<location id="id0" x="-569" y="-110">
 			<name x="-586" y="-144">Final</name>
 		</location>
@@ -62,13 +62,13 @@ int k := 10;</declaration>
     </system>
 	<queries>
 		<query>
-			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 2
+			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 3
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>E&lt;&gt; n == 6
+			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 9
 			</formula>
 			<comment>
 			</comment>
