@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+typedef int[1,2] counters;
+int active := 2; // number of counters still working; program is complete when this reaches 0
+int n := 0;</declaration>
+	<template>
+		<name x="5" y="5">Counter</name>
+		<parameter>counters c</parameter>
+		<declaration>// Place local declarations here.
+int r;
+int k := 10;</declaration>
+		<location id="id0" x="-569" y="-110">
+			<name x="-586" y="-144">Final</name>
+		</location>
+		<location id="id1" x="-85" y="-170">
+			<name x="-110" y="-212">AttrN</name>
+		</location>
+		<location id="id2" x="-204" y="-170">
+			<name x="-221" y="-212">Incr</name>
+		</location>
+		<location id="id3" x="-340" y="-170">
+			<name x="-365" y="-212">AttrR</name>
+		</location>
+		<location id="id4" x="-450" y="-170">
+			<name x="-467" y="-212">Initial</name>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-552" y="-170">k &lt;= 0</label>
+			<label kind="assignment" x="-620" y="-187">active := active - 1</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-407" y="-102">k := k-1</label>
+			<nail x="-102" y="-102"/>
+			<nail x="-425" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="assignment" x="-186" y="-170">n := r</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-322" y="-170">r := r+1</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-433" y="-195">k &gt; 0</label>
+			<label kind="assignment" x="-432" y="-170">r := n</label>
+		</transition>
+	</template>
+	<system>system Counter;
+    </system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 2
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; n == 6
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>

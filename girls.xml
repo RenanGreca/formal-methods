@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>clock x;
+clock time;
+typedef int[1,4] girls;
+bool knows[girls][girls];
+chan call[girls][girls];
+void share(girls a, girls b) {
+    for (c: girls) {
+        knows[a][c] := knows[a][c] || knows [b][c];
+        knows[b][c] := knows[a][c];
+    }
+}</declaration>
+	<template>
+		<name x="5" y="5">Girl</name>
+		<parameter>girls w</parameter>
+		<location id="id0" x="8" y="17">
+			<label kind="invariant" x="-8" y="42">x&lt;=2</label>
+		</location>
+		<location id="id1" x="8" y="-127">
+		</location>
+		<init ref="id1"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="-153" y="-34">v: girls</label>
+			<label kind="guard" x="-153" y="17">x &gt;= 2</label>
+			<label kind="synchronisation" x="-153" y="-17">call[w][v]!</label>
+			<label kind="assignment" x="-178" y="0">share(w,v), x := 0</label>
+			<nail x="-51" y="-25"/>
+			<nail x="-51" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="select" x="93" y="-34">v:girls</label>
+			<label kind="synchronisation" x="93" y="-17">call[v][w]?</label>
+			<nail x="68" y="-25"/>
+			<nail x="68" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="17" y="-76">x &gt;= 1</label>
+			<label kind="assignment" x="17" y="-93">knows[w][w] := 1</label>
+		</transition>
+	</template>
+	<system>system Girl;
+</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; forall (a: girls) forall (b: girls) (knows[a][b] == 1)
+			</formula>
+			<comment>E: there is a computation; &lt;&gt;: that in some state; all girls know all secrets
+			</comment>
+		</query>
+	</queries>
+</nta>
