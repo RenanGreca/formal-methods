@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+const int e = 0;
+const int b = 1;
+const int w = 2;
+const int x = 3;
+
+typedef int[0,4] range;
+int board[5][5] = {{x, x, w, w, w},
+                   {x, x, w, w, w},
+                   {b, b, e, w, w},
+                   {b, b, b, x, x},
+                   {b, b, b, x, x}};
+
+int final[5][5] = {{x, x, b, b, b},
+                   {x, x, b, b, b},
+                   {w, w, e, b, b},
+                   {w, w, w, x, x},
+                   {w, w, w, x, x}};
+
+int e_x = 2;
+int e_y = 2;
+
+chan move_down_one;
+chan move_down_two;
+chan move_left_one;
+chan move_left_two;
+chan move_up_one;
+chan move_up_two;
+chan move_right_one;
+chan move_right_two;
+
+void move_down_one_action() {
+    if (board[e_y-1][e_x] == w) {
+        board[e_y-1][e_x] = e;
+        board[e_y][e_x] = w;
+        e_y = e_y-1;
+    }
+}
+
+void move_down_two_action() {
+    if (board[e_y-2][e_x] == w) {
+        board[e_y-2][e_x] = e;
+        board[e_y][e_x] = w;
+        e_y = e_y-2;
+    }
+}
+
+void move_left_one_action() {
+    if (board[e_y][e_x+1] == w) {
+        board[e_y][e_x+1] = e;
+        board[e_y][e_x] = w;
+        e_x = e_x+1;
+    }
+}
+
+void move_left_two_action() {
+    if (board[e_y][e_x+2] == w) {
+        board[e_y][e_x+2] = e;
+        board[e_y][e_x] = w;
+        e_x = e_x+2;
+    }
+}
+
+void move_up_one_action() {
+    if (board[e_y+1][e_x] == b) {
+        board[e_y+1][e_x] = e;
+        board[e_y][e_x] = b;
+        e_y = e_y+1;
+    }
+}
+
+void move_up_two_action() {
+    if (board[e_y+2][e_x] == b) {
+        board[e_y+2][e_x] = e;
+        board[e_y][e_x] = b;
+        e_y = e_y+2;
+    }
+}
+
+void move_right_one_action() {
+    if (board[e_y][e_x-1] == b) {
+        board[e_y][e_x-1] = e;
+        board[e_y][e_x] = b;
+        e_x = e_x-1;
+    }
+}
+
+void move_right_two_action() {
+    if (board[e_y][e_x-2] == b) {
+        board[e_y][e_x-2] = e;
+        board[e_y][e_x] = b;
+        e_x = e_x-2;
+    }
+}
+
+bool is_final_state() {
+    for (i: range) {
+        for (j: range) {
+            if (board[i][j] != final[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}</declaration>
+	<template>
+		<name>Player</name>
+		<location id="id0" x="-425" y="17">
+		</location>
+		<location id="id1" x="-170" y="-136">
+		</location>
+		<init ref="id1"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-476" y="-42">is_final_state()</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-255" y="-272">e_y-1 &gt;= 0</label>
+			<label kind="synchronisation" x="-289" y="-255">move_down_one!</label>
+			<label kind="assignment" x="-348" y="-238">move_down_one_action()</label>
+			<nail x="-187" y="-204"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-365" y="-204">e_x-1 &gt;= 0</label>
+			<label kind="synchronisation" x="-408" y="-187">move_right_one!</label>
+			<label kind="assignment" x="-459" y="-161">move_right_one_action()</label>
+			<nail x="-280" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-365" y="-136">e_x-2 &gt;= 0</label>
+			<label kind="synchronisation" x="-408" y="-119">move_right_two!</label>
+			<label kind="assignment" x="-467" y="-102">move_right_two_action()</label>
+			<nail x="-263" y="-110"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-246" y="-59">e_y+1 &lt; 5</label>
+			<label kind="synchronisation" x="-272" y="-42">move_up_one!</label>
+			<label kind="assignment" x="-323" y="-25">move_up_one_action()</label>
+			<nail x="-204" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-153" y="-59">e_y+2 &lt; 5</label>
+			<label kind="synchronisation" x="-153" y="-42">move_up_two!</label>
+			<label kind="assignment" x="-153" y="-25">move_up_two_action()</label>
+			<nail x="-144" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-59" y="-127">e_x+2 &lt; 5</label>
+			<label kind="synchronisation" x="-59" y="-110">move_left_two!</label>
+			<label kind="assignment" x="-59" y="-93">move_left_two_action()</label>
+			<nail x="-85" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-68" y="-187">e_x+1 &lt; 5</label>
+			<label kind="synchronisation" x="-68" y="-170">move_left_one!</label>
+			<label kind="assignment" x="-68" y="-153">move_left_one_action()</label>
+			<nail x="-76" y="-153"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-144" y="-272">e_y-2 &gt;= 0</label>
+			<label kind="synchronisation" x="-144" y="-255">move_down_two!</label>
+			<label kind="assignment" x="-144" y="-238">move_down_two_action()</label>
+			<nail x="-144" y="-212"/>
+		</transition>
+	</template>
+	<template>
+		<name>Board</name>
+		<location id="id2" x="-93" y="110">
+		</location>
+		<location id="id3" x="-93" y="-59">
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-229" y="-127">move_down_one?</label>
+			<nail x="-102" y="-93"/>
+			<nail x="-102" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-255" y="-68">move_right_one?</label>
+			<nail x="-136" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-255" y="-42">move_right_two?</label>
+			<nail x="-127" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-204" y="-17">move_up_one?</label>
+			<nail x="-110" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-51" y="-25">move_up_two?</label>
+			<nail x="-68" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-34" y="-59">move_left_two?</label>
+			<nail x="-59" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-42" y="-85">move_left_one?</label>
+			<nail x="-59" y="-76"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-93" y="-127">move_down_two?</label>
+			<nail x="-85" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-76" y="34">is_final_state()</label>
+		</transition>
+	</template>
+	<system>system Player, Board;</system>
+	<queries>
+		<query>
+			<formula>E&lt;&gt; is_final_state()
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>

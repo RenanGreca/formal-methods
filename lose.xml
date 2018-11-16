@@ -62,7 +62,7 @@ int k := 3;</declaration>
     </system>
 	<queries>
 		<query>
-			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 3
+			<formula>E&lt;&gt; active == 0 &amp;&amp; n == 2
 			</formula>
 			<comment>
 			</comment>
