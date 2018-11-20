@@ -1,0 +1,149 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+
+\begin{document}
+
+\title{Formal methods at work 2018}
+
+\begin{enumerate}
+	\item Consider two statements, $S_1$ and $S_2$, that are equivalent by big step semantics ($S_1 \approx_{BS} S_2$).
+		For every program $S$ and memory state $
+	\sigma$, it is also true that $(S_1;S) \approx_{BS} (S_2;S)$. 
+		
+		\begin{equation}
+			\frac{(S_1,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_1;S,\sigma)\Rightarrow\sigma'} 
+		\end{equation}
+		
+		\begin{equation}
+			\frac{(S_2,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_2;S,\sigma)\Rightarrow\sigma'}
+		\end{equation}
+		
+		By the definition of equivalence, both $(S_1,\sigma)$ and $(S_2,\sigma)$ result in the same state $\sigma''$, from which the program $S$ then executes and produces the final state $\sigma'$.
+		
+		\\
+		
+	\item We can define the small-step semantics of \texttt{assert $b$ before $S$} using the following rules:
+		\begin{equation}
+			\frac{}{(\texttt{assert }b\texttt{ before }S,\sigma)\rightarrow (S,\sigma)}eval(b,\sigma)=true
+		\end{equation}
+		
+		\begin{equation}
+			\frac{}{(\texttt{assert }b\texttt{ before }S,\sigma)}eval(b,\sigma)=false
+		\end{equation}
+		
+		In other words, $S$ is executed if $b$ evaluates to $true$. Otherwise, no final state is produced.
+		
+		The difference between \texttt{assert $false$ before $S$} and \texttt{while $true$ do $skip$} is that computation finishes on the former case, despite the lack of a final state, while the latter case is an endless loop.
+		
+		The difference between \texttt{assert $false$ before $S$} and $skip$ can be illustrated by the sequential operation of two statements.		
+		\begin{equation}
+			\frac{}{(\texttt{assert }false\texttt{ before }S;S_2,\sigma)}	
+		\end{equation}
+		
+		\begin{equation}
+			\frac{}{(skip; S_2,\sigma)\rightarrow (S_2,\sigma)}	
+		\end{equation}
+
+		Since the computation is aborted in the case of an unfulfilled assertion, statements after it are not executed. However, they are always executed if preceded by a $skip$ statement.
+		
+	\item Consider the statement:\\ \texttt{$x:= -1$; while $x\leq 0$ do ($x:=x-1$ or $x:= (-1)\times x$)}.
+	
+	\begin{equation}
+		S = \texttt{while }x\leq 0\texttt{ do }(x:=x-1\texttt{ or }x:= (-1)\times x)
+	\end{equation}
+	
+	Always choosing the left-side path of the or construct, we can develop the statement using big-step semantics:
+	\begin{equation}
+		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=x-1; S,\sigma[x\mapsto -1])\Rightarrow(S,\sigma[x\mapsto -2])}{(S,\sigma[x\mapsto -1])}}{(S,\sigma)}
+	\end{equation}
+	
+	We can observe that, by following the left-side path of the \texttt{or}, the value of $x$ is reduced by 1 at every iteration of the while loop. This way, the condition $x\leq 0$ is always true and the loop never ends.
+	
+	However, if we follow the right-side path of the \texttt{or}, we can achieve a final state:
+	
+	\begin{equation}
+		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=(-1)\times x; S,\sigma[x\mapsto -1])\Rightarrow(S,\sigma[x\mapsto 1])}{(S,\sigma[x\mapsto -1])\Rightarrow \sigma[x\mapsto 1]}}{(S,\sigma)\Rightarrow\sigma[x\mapsto 1]}
+	\end{equation}
+	
+	At any point during computation, if the right-side path of the \texttt{or}, $x$ receives a positive value and the execution terminates. The resulting state can have $x$ as any natural number. However, if the right-side path is never taken, computation never ends.
+	
+	The development of the statement using small-step semantics is as follows:
+	
+		$$
+		(x:=-1; S,\sigma) \rightarrow
+		$$
+		$$
+		(S,\sigma[x\mapsto-1]) \rightarrow
+		$$
+		$$
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-1]) \rightarrow
+		$$
+		$$
+		(x:=x-1\texttt{ or }x:= (-1)\times x; S,\sigma[x\mapsto-1]) \rightarrow
+		$$
+
+		
+		From here, the following steps depend on the path taken by the \texttt{or}. Following the left-side path:
+		$$
+		(x:=x-1; S,\sigma[x\mapsto-1]) \rightarrow 
+		$$
+		$$
+		(S,\sigma[x\mapsto-2]) \rightarrow 
+		$$
+		$$
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-2]) \rightarrow
+		$$
+		$$
+		(x:=x-1\texttt{ or }x:= (-1)\times x; S,\sigma[x\mapsto-2]) \rightarrow
+		$$
+		$$
+		(x:=x-1; S,\sigma[x\mapsto-2]) \rightarrow 
+		$$
+		$$
+		(S,\sigma[x\mapsto-3]) \rightarrow
+		$$
+		
+		The development continues endlessly for all values of $x < 0$. Following the right-side path, we achieve a different conclusion:
+		
+		$$
+		(x:=(-1)\times x; S,\sigma[x\mapsto-1]) \rightarrow 
+		$$
+		$$
+		(S,\sigma[x\mapsto1]) \rightarrow
+		$$
+		$$
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto1]) \rightarrow
+		$$
+		$$
+		(skip,\sigma[x\mapsto1]) \rightarrow
+		$$
+		$$
+		\sigma[x\mapsto 1]
+		$$
+		
+		Similarly to what happened above, the right-side path only needs to be taken once for us to reach a final state.
+		Therefore, neither big-step nor small-step semantics are sufficient to fully represent the possible final states of this statement, as an endless loop is found using both.
+		
+	\item 
+	\begin{equation}
+		g=[while\ x\geq 0\ do\ skip]
+	\end{equation}
+	\begin{equation}
+		F_{x\geq 0,skip}(g) = cond(eval(x\geq 0,-), g\circ [skip], id) = cond(eval(x\geq0,-),g,id)
+	\end{equation}
+	\begin{equation}
+		F_{x\geq 0,skip}(g)(\sigma) = \begin{cases}\sigma\texttt{, if }\sigma(x)<0 \\ \bot\texttt{, if }\sigma(x) \geq 0\end{cases}
+	\end{equation}
+	
+	\item 
+	\begin{equation}
+		g=[repeat\ S\ until\ b]=[while\ !b\ do\ S]\circ S
+	\end{equation}
+	\begin{equation}
+		[repeat\ S\ until\ b]=cond(eval(!b,-), g, id)\circ [S]
+	\end{equation}
+		
+	\end{enumerate}
+
+\end{document}
