@@ -1,148 +1,145 @@
 \documentclass[11pt]{article}
 
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\usepackage[margin=0.7in]{geometry}
 
 \begin{document}
 
 \title{Formal methods at work 2018}
+\author{Renan Greca; Konstantin Prokopchik}
+
+\maketitle
 
 \begin{enumerate}
-	\item Consider two statements, $S_1$ and $S_2$, that are equivalent by big step semantics ($S_1 \approx_{BS} S_2$).
+	\item Consider two statements, $S_1$ and $S_2$, that are equivalent in big step semantics ($S_1 \approx_{BS} S_2$).
 		For every program $S$ and memory state $
 	\sigma$, it is also true that $(S_1;S) \approx_{BS} (S_2;S)$. 
 		
-		\begin{equation}
+		\begin{equation*}
 			\frac{(S_1,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_1;S,\sigma)\Rightarrow\sigma'} 
-		\end{equation}
+		\end{equation*}
 		
-		\begin{equation}
+		\begin{equation*}
 			\frac{(S_2,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_2;S,\sigma)\Rightarrow\sigma'}
-		\end{equation}
+		\end{equation*}
 		
 		By the definition of equivalence, both $(S_1,\sigma)$ and $(S_2,\sigma)$ result in the same state $\sigma''$, from which the program $S$ then executes and produces the final state $\sigma'$.
-		
-		\\
-		
-	\item We can define the small-step semantics of \texttt{assert $b$ before $S$} using the following rules:
-		\begin{equation}
+				
+	\item We can define the small-step semantics of \texttt{assert $b$ before $S$} using the following rule:
+		\begin{equation*}
 			\frac{}{(\texttt{assert }b\texttt{ before }S,\sigma)\rightarrow (S,\sigma)}eval(b,\sigma)=true
-		\end{equation}
+		\end{equation*}
 		
-		\begin{equation}
-			\frac{}{(\texttt{assert }b\texttt{ before }S,\sigma)}eval(b,\sigma)=false
-		\end{equation}
-		
-		In other words, $S$ is executed if $b$ evaluates to $true$. Otherwise, no final state is produced.
+		In other words, $S$ is executed if $b$ evaluates to $true$. Otherwise, no transition is produced.
 		
 		The difference between \texttt{assert $false$ before $S$} and \texttt{while $true$ do $skip$} is that computation finishes on the former case, despite the lack of a final state, while the latter case is an endless loop.
 		
-		The difference between \texttt{assert $false$ before $S$} and $skip$ can be illustrated by the sequential operation of two statements.		
-		\begin{equation}
-			\frac{}{(\texttt{assert }false\texttt{ before }S;S_2,\sigma)}	
-		\end{equation}
+		The difference between \texttt{assert $false$ before $S$} and $skip$ can be illustrated by the sequential operation of two statements.	Consider a statement in the form of $(S_1;S_2)$ in which $S_1$ can be either \texttt{assert $false$ before $S$} or $skip$:
 		
-		\begin{equation}
+		\begin{equation*}
+			\frac{}{(\texttt{assert }false\texttt{ before }S;S_2,\sigma)}	
+		\end{equation*}
+		
+		\begin{equation*}
 			\frac{}{(skip; S_2,\sigma)\rightarrow (S_2,\sigma)}	
-		\end{equation}
+		\end{equation*}
 
-		Since the computation is aborted in the case of an unfulfilled assertion, statements after it are not executed. However, they are always executed if preceded by a $skip$ statement.
+		It is possible to observe that, in the first case, the computation is aborted and $S_2$ is not executed. However, in the second case, $S_2$ is always executed with the same memory state as the one used by $skip$.
 		
 	\item Consider the statement:\\ \texttt{$x:= -1$; while $x\leq 0$ do ($x:=x-1$ or $x:= (-1)\times x$)}.
+	For the purposes of brevity, let us call the second part of the statement as $S$.
 	
-	\begin{equation}
+	\begin{equation*}
 		S = \texttt{while }x\leq 0\texttt{ do }(x:=x-1\texttt{ or }x:= (-1)\times x)
-	\end{equation}
+	\end{equation*}
 	
-	Always choosing the left-side path of the or construct, we can develop the statement using big-step semantics:
-	\begin{equation}
-		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=x-1; S,\sigma[x\mapsto -1])\Rightarrow(S,\sigma[x\mapsto -2])}{(S,\sigma[x\mapsto -1])}}{(S,\sigma)}
-	\end{equation}
+	The \texttt{or} construct contained within $S$ causes there to be multiple possible final states for this statement. If the left-side path of the \texttt{or} is always chosen, no final state is produced and, therefore, it is not viable to develop the statement in big-step semantics.
 	
-	We can observe that, by following the left-side path of the \texttt{or}, the value of $x$ is reduced by 1 at every iteration of the while loop. This way, the condition $x\leq 0$ is always true and the loop never ends.
+	However, we can develop the statement using big-step semantics by assuming the right-side path of the \texttt{or} is taken and achieving a final state:
 	
-	However, if we follow the right-side path of the \texttt{or}, we can achieve a final state:
+	\begin{equation*}
+		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=(-1)\times x,\sigma[x\mapsto -1])\Rightarrow\sigma[x\mapsto1]\ (S;\sigma[x\mapsto 1])\Rightarrow\sigma[x\mapsto 1]}{(S,\sigma[x\mapsto -1])\Rightarrow \sigma[x\mapsto 1]}}{(x:=-1;S,\sigma)\Rightarrow\sigma[x\mapsto 1]}
+	\end{equation*}
 	
-	\begin{equation}
-		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=(-1)\times x; S,\sigma[x\mapsto -1])\Rightarrow(S,\sigma[x\mapsto 1])}{(S,\sigma[x\mapsto -1])\Rightarrow \sigma[x\mapsto 1]}}{(S,\sigma)\Rightarrow\sigma[x\mapsto 1]}
-	\end{equation}
+	In other words, given an initial state where $x$ is a negative integer $n$, following the right-side path of the \texttt{or} causes the following big-step transition: $(S,\sigma[x\mapsto n]) \Rightarrow \sigma[x\mapsto p]$, where $p = -n$.
 	
-	At any point during computation, if the right-side path of the \texttt{or}, $x$ receives a positive value and the execution terminates. The resulting state can have $x$ as any natural number. However, if the right-side path is never taken, computation never ends.
+	It is possible to observe that, by following the left-side path instead of the right-side path, the value of $x$ decreases and we find statement/state pairs such as $(S,\sigma[x\mapsto -2])$, $(S,\sigma[x\mapsto -3])$ and so forth. Since the left-side path can be taken an infinite number of times, for any negative integer $n$ there exists a transition in the form of $(S,\sigma[x\mapsto n])$. Then, by following the right-side path at any point, $x$ becomes positive and the computation ends.
 	
+	Therefore, this program as a whole can be described in big-step semantics as:
+	
+	\begin{equation*}
+		\forall p\in \mathbb{N},\ (x:= -1; S,\sigma) \Rightarrow \sigma[x\mapsto p]
+	\end{equation*}
+		
 	The development of the statement using small-step semantics is as follows:
 	
-		$$
-		(x:=-1; S,\sigma) \rightarrow
-		$$
-		$$
-		(S,\sigma[x\mapsto-1]) \rightarrow
-		$$
-		$$
-		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-1]) \rightarrow
-		$$
-		$$
+		\begin{align*}
+		(x:=-1; S,\sigma) \rightarrow \\
+		(S,\sigma[x\mapsto-1]) \rightarrow \\
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-1]) \rightarrow \\
 		(x:=x-1\texttt{ or }x:= (-1)\times x; S,\sigma[x\mapsto-1]) \rightarrow
-		$$
+		\end{align*}
 
-		
 		From here, the following steps depend on the path taken by the \texttt{or}. Following the left-side path:
-		$$
-		(x:=x-1; S,\sigma[x\mapsto-1]) \rightarrow 
-		$$
-		$$
-		(S,\sigma[x\mapsto-2]) \rightarrow 
-		$$
-		$$
-		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-2]) \rightarrow
-		$$
-		$$
-		(x:=x-1\texttt{ or }x:= (-1)\times x; S,\sigma[x\mapsto-2]) \rightarrow
-		$$
-		$$
-		(x:=x-1; S,\sigma[x\mapsto-2]) \rightarrow 
-		$$
-		$$
+		
+		\begin{align*}
+		(x:=x-1; S,\sigma[x\mapsto-1]) \rightarrow \\
+		(S,\sigma[x\mapsto-2]) \rightarrow \\
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto-2]) \rightarrow\\
+		(x:=x-1\texttt{ or }x:= (-1)\times x; S,\sigma[x\mapsto-2]) \rightarrow\\
+		(x:=x-1; S,\sigma[x\mapsto-2]) \rightarrow \\
 		(S,\sigma[x\mapsto-3]) \rightarrow
-		$$
+		\end{align*}
 		
 		The development continues endlessly for all values of $x < 0$. Following the right-side path, we achieve a different conclusion:
 		
-		$$
-		(x:=(-1)\times x; S,\sigma[x\mapsto-1]) \rightarrow 
-		$$
-		$$
-		(S,\sigma[x\mapsto1]) \rightarrow
-		$$
-		$$
-		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto1]) \rightarrow
-		$$
-		$$
-		(skip,\sigma[x\mapsto1]) \rightarrow
-		$$
-		$$
+		\begin{align*}
+		(x:=(-1)\times x; S,\sigma[x\mapsto-1]) \rightarrow \\
+		(S,\sigma[x\mapsto1]) \rightarrow \\
+		(if\ x\leq 0\ then\ (x:=x-1\texttt{ or }x:= (-1)\times x); S\ else\ skip,\sigma[x\mapsto1]) \rightarrow \\
+		(skip,\sigma[x\mapsto1]) \rightarrow \\
 		\sigma[x\mapsto 1]
-		$$
+		\end{align*}
 		
-		Similarly to what happened above, the right-side path only needs to be taken once for us to reach a final state.
-		Therefore, neither big-step nor small-step semantics are sufficient to fully represent the possible final states of this statement, as an endless loop is found using both.
+		While in big-step semantics this program always results in a state in which $x$ has the value of any natural number, in small-step semantics it is clear that the program might result in an endless loop.
+		This illustrates the differences between the two approaches: the big-step semantics is useful to validate what the program does, but the small-step semantics allows us to see where execution could go wrong.
 		
+		Now, consider an extension to the language in the form of \texttt{random($x$)}, which produces a final state in which $x$ is a random natural number.
+		Using big-step and small-step semantics, the transition provided by \texttt{random($x$)} is the same:
+		
+		\begin{equation*}
+			\forall p\in \mathbb{N},\ \frac{}{(\texttt{random}(x),\sigma)\rightarrow\sigma[x\mapsto p]}
+		\end{equation*}
+		
+		We have already seen a statement that produces an arbitrary natural number in big-step semantics. Therefore, when considering big-step semantics, \texttt{random($x$)} appears redundant.
+		
+		However, to show that \texttt{random($x$)} is redundant in small-step semantics, there needs to be a small-step transition that produces a random natural number without the risk of an endless loop. This is not possible using the \texttt{or} construct.
+		
+		The \texttt{or} construct effectively creates a binary tree, in which leaves are final states and nodes lead to more possible final states. Since there are infinite natural numbers, a function that returns a random natural number must have infinite final states. Therefore, this function is represented by an infinite binary tree, which according to König's Lemma, always has an infinite path (that cannot be represented using small-step semantics).
+						
 	\item 
-	\begin{equation}
-		g=[while\ x\geq 0\ do\ skip]
-	\end{equation}
-	\begin{equation}
-		F_{x\geq 0,skip}(g) = cond(eval(x\geq 0,-), g\circ [skip], id) = cond(eval(x\geq0,-),g,id)
-	\end{equation}
-	\begin{equation}
+	\begin{equation*}
+		g=\llbracket while\ x\geq 0\ do\ skip\rrbracket
+	\end{equation*}
+	\begin{equation*}
+		F_{x\geq 0,skip}(g) = cond(eval(x\geq 0,-), g\circ \llbracket skip\rrbracket, id) = cond(eval(x\geq0,-),g,id)
+	\end{equation*}
+	\begin{equation*}
 		F_{x\geq 0,skip}(g)(\sigma) = \begin{cases}\sigma\texttt{, if }\sigma(x)<0 \\ \bot\texttt{, if }\sigma(x) \geq 0\end{cases}
-	\end{equation}
+	\end{equation*}
 	
 	\item 
-	\begin{equation}
-		g=[repeat\ S\ until\ b]=[while\ !b\ do\ S]\circ S
-	\end{equation}
-	\begin{equation}
-		[repeat\ S\ until\ b]=cond(eval(!b,-), g, id)\circ [S]
-	\end{equation}
+	\begin{equation*}
+		g=\llbracket repeat\ S\ until\ b\rrbracket=\llbracket while\ !b\ do\ S\rrbracket\circ \llbracket S\rrbracket
+	\end{equation*}
+	\begin{equation*}
+		\llbracket repeat\ S\ until\ b\rrbracket=cond(eval(!b,-), g, id)\circ \llbracket S\rrbracket
+	\end{equation*}
+	\begin{equation*}
+		\llbracket repeat\ S\ until\ b] = \begin{cases}\llbracket S\rrbracket\texttt{, if }eval(b)=false \\ \llbracket repeat\ S\ until\ b\rrbracket\circ \llbracket S\rrbracket\texttt{, if }eval(b)=true\end{cases}
+	\end{equation*}
 		
 	\end{enumerate}
 
