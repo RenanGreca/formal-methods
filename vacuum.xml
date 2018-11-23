@@ -18,11 +18,13 @@ int n_turn = 0;
 int n_forward = 0;
 int n_steps = 0;
 
-// 3D array of rules [y][x][d]
+bool b_is_clean = false;
+
+// 3D array of rules - indexed as [y][x][d]
 int rules[3][3][4] = { 
                         { 
                             {
-                                2, 0, 0, 0
+                                0, 0, 0, 0
                             },
                             {
                                 0, 0, 0, 0
@@ -63,7 +65,7 @@ clock time := 0.0;
 
 
 typedef int[0,2] count;
-// 2D array to know which spaces have been visited [y][x]
+// 2D array to know which spaces have been visited - indexed as [y][x]
 int room [3][3] = {{1, 1, 1},
                    {1, 1, 1},
                    {1, 1, 1}};
@@ -74,7 +76,22 @@ int x = 0;
 int y = 0;
 int d = n;
 
+void preset_rules() {
+    rules[0][0][n] = a_forward;
+    //rules[1][0][n] = a_forward;
+    //rules[2][0][n] = a_turn;
+    //rules[2][0][e] = a_forward;
+}
+
+bool completed_cycle() {
+    return x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; b_is_clean;
+}
+
 bool can_turn() {
+    if (completed_cycle()) {
+        return false;
+    }
+
 	if (rules[y][x][d] == a_turn || rules[y][x][d] == a_blank) {
 		return true;
 	}
@@ -82,6 +99,10 @@ bool can_turn() {
 }
 
 bool can_move_forward() {
+    if (completed_cycle()) {
+        return false;
+    }
+
 	if (rules[y][x][d] == a_forward) {
 		return true;
 	}
@@ -136,16 +157,29 @@ bool is_clean() {
 	<template>
 		<name x="5" y="5">Robot</name>
 		<declaration>// Place local declarations here.</declaration>
-		<location id="id0" x="-42" y="-204">
+		<location id="id0" x="-255" y="-204">
+			<name x="-272" y="-247">Done</name>
+		</location>
+		<location id="id1" x="-42" y="-204">
 			<name x="-68" y="-238">Cleaning</name>
 		</location>
-		<location id="id1" x="-42" y="-59">
+		<location id="id2" x="-42" y="-59">
 			<name x="-68" y="-34">Moving</name>
 		</location>
-		<init ref="id0"/>
+		<init ref="id1"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-331" y="-153">completed_cycle()</label>
+		</transition>
 		<transition>
 			<source ref="id1"/>
-			<target ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-408" y="-289">completed_cycle()</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id2"/>
 			<label kind="guard" x="-297" y="-76">can_turn() &amp;&amp; ck &gt;= 4</label>
 			<label kind="synchronisation" x="-204" y="-59">ch_turn!</label>
 			<label kind="assignment" x="-246" y="-42">turn(), ck := 0</label>
@@ -153,36 +187,37 @@ bool is_clean() {
 			<nail x="-136" y="-25"/>
 		</transition>
 		<transition>
-			<source ref="id1"/>
-			<target ref="id0"/>
+			<source ref="id2"/>
+			<target ref="id1"/>
 			<label kind="guard" x="-8" y="-170">can_move_forward() &amp;&amp; ck &gt;= 2</label>
 			<label kind="synchronisation" x="-8" y="-153">ch_forward!</label>
 			<label kind="assignment" x="-8" y="-136">forward(), ck := 0</label>
 			<nail x="-17" y="-144"/>
 		</transition>
 		<transition>
-			<source ref="id0"/>
-			<target ref="id1"/>
-			<label kind="assignment" x="-25" y="-272">room[y][x] = 0</label>
-			<label kind="comments" x="-25" y="-297">Clean</label>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-170" y="-187">!completed_cycle()</label>
+			<label kind="assignment" x="-25" y="-264">room[y][x] = 0, b_is_clean = is_clean(), preset_rules()</label>
+			<label kind="comments" x="-25" y="-289">Clean</label>
 		</transition>
 	</template>
 	<template>
 		<name>Room</name>
-		<location id="id2" x="-127" y="-8">
+		<location id="id3" x="-127" y="-8">
 		</location>
-		<init ref="id2"/>
+		<init ref="id3"/>
 		<transition>
-			<source ref="id2"/>
-			<target ref="id2"/>
+			<source ref="id3"/>
+			<target ref="id3"/>
 			<label kind="synchronisation" x="-263" y="-17">ch_turn?</label>
 			<label kind="assignment" x="-501" y="17">n_turn := n_turn + 1, n_steps := n_steps + 1</label>
 			<nail x="-187" y="-42"/>
 			<nail x="-178" y="42"/>
 		</transition>
 		<transition>
-			<source ref="id2"/>
-			<target ref="id2"/>
+			<source ref="id3"/>
+			<target ref="id3"/>
 			<label kind="synchronisation" x="-42" y="-17">ch_forward?</label>
 			<label kind="assignment" x="-34" y="0">n_forward := n_forward + 1, n_steps := n_steps + 1</label>
 			<nail x="-76" y="-42"/>
@@ -192,19 +227,19 @@ bool is_clean() {
 	<system>system Robot, Room;</system>
 	<queries>
 		<query>
-			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; is_clean() &amp;&amp; n_forward == 12 &amp;&amp; n_turn == 16
+			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; is_clean() &amp;&amp; n_forward == 10 &amp;&amp; n_turn == 16
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; is_clean() &amp;&amp; n_turn == 16
+			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; is_clean() &amp;&amp; n_forward == 10
 			</formula>
 			<comment>
 			</comment>
 		</query>
 		<query>
-			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; is_clean()
+			<formula>E&lt;&gt; x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; b_is_clean
 			</formula>
 			<comment>
 			</comment>

@@ -15,17 +15,20 @@
 \begin{enumerate}
 	\item Consider two statements, $S_1$ and $S_2$, that are equivalent in big step semantics ($S_1 \approx_{BS} S_2$).
 		For every program $S$ and memory state $
-	\sigma$, it is also true that $(S_1;S) \approx_{BS} (S_2;S)$. 
+	\sigma$, it is also true that $(S_1;S) \approx_{BS} (S_2;S)$.
+		Consider the following transition: $(S_1;S,\sigma)\Rightarrow\sigma'$: by the definition of the big-step semantics for sequential operations, there is a memory state $\sigma''$ such that $(S_1,\sigma)\Rightarrow\sigma''$:
 		
 		\begin{equation*}
 			\frac{(S_1,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_1;S,\sigma)\Rightarrow\sigma'} 
 		\end{equation*}
 		
+		Since $S_1\approx_{BS} S_2$, it is also true that $(S_2,\sigma)\Rightarrow\sigma''$, and therefore:
+		
 		\begin{equation*}
 			\frac{(S_2,\sigma)\Rightarrow\sigma'' (S,\sigma'')\Rightarrow\sigma'}{(S_2;S,\sigma)\Rightarrow\sigma'}
 		\end{equation*}
 		
-		By the definition of equivalence, both $(S_1,\sigma)$ and $(S_2,\sigma)$ result in the same state $\sigma''$, from which the program $S$ then executes and produces the final state $\sigma'$.
+		By the definition of equivalence, both $(S_1,\sigma)$ and $(S_2,\sigma)$ result in the same state $\sigma''$, and therefore both $(S_1;S,\sigma)$ and $(S_2;S,\sigma)$ produce the same final state $\sigma'$.
 				
 	\item We can define the small-step semantics of \texttt{assert $b$ before $S$} using the following rule:
 		\begin{equation*}
@@ -55,9 +58,9 @@
 		S = \texttt{while }x\leq 0\texttt{ do }(x:=x-1\texttt{ or }x:= (-1)\times x)
 	\end{equation*}
 	
-	The \texttt{or} construct contained within $S$ causes there to be multiple possible final states for this statement. If the left-side path of the \texttt{or} is always chosen, no final state is produced and, therefore, it is not viable to develop the statement in big-step semantics.
+	The \texttt{or} construct contained within $S$ leads to the existence of multiple possible final states for this statement. If the left-side path of the \texttt{or} is always chosen, no final state is produced and, therefore, there is no transition in big-step semantics.
 	
-	However, we can develop the statement using big-step semantics by assuming the right-side path of the \texttt{or} is taken and achieving a final state:
+	However, we can prove the transition for S using big-step semantics by assuming the right-side path of the \texttt{or} is taken and achieving a final state, for example:
 	
 	\begin{equation*}
 		\frac{(x:=-1,\sigma)\Rightarrow\sigma[x\mapsto-1]\ \frac{(x:=(-1)\times x,\sigma[x\mapsto -1])\Rightarrow\sigma[x\mapsto1]\ (S;\sigma[x\mapsto 1])\Rightarrow\sigma[x\mapsto 1]}{(S,\sigma[x\mapsto -1])\Rightarrow \sigma[x\mapsto 1]}}{(x:=-1;S,\sigma)\Rightarrow\sigma[x\mapsto 1]}
@@ -65,7 +68,7 @@
 	
 	In other words, given an initial state where $x$ is a negative integer $n$, following the right-side path of the \texttt{or} causes the following big-step transition: $(S,\sigma[x\mapsto n]) \Rightarrow \sigma[x\mapsto p]$, where $p = -n$.
 	
-	It is possible to observe that, by following the left-side path instead of the right-side path, the value of $x$ decreases and we find statement/state pairs such as $(S,\sigma[x\mapsto -2])$, $(S,\sigma[x\mapsto -3])$ and so forth. Since the left-side path can be taken an infinite number of times, for any negative integer $n$ there exists a transition in the form of $(S,\sigma[x\mapsto n])$. Then, by following the right-side path at any point, $x$ becomes positive and the computation ends.
+	It is possible to observe that, by following the left-side path instead of the right-side path, the value of $x$ decreases and we find statement/state pairs such as $(S,\sigma[x\mapsto -2])$, $(S,\sigma[x\mapsto -3])$ and so forth. Since the left-side path can be taken an arbitrary number of times, for any negative integer $n$ there exists a transition in the form of $(S,\sigma[x\mapsto n])$. Then, by following the right-side path at any point, $x$ becomes positive and the computation ends.
 	
 	Therefore, this program as a whole can be described in big-step semantics as:
 	
@@ -110,16 +113,20 @@
 		Using big-step and small-step semantics, the transition provided by \texttt{random($x$)} is the same:
 		
 		\begin{equation*}
-			\forall p\in \mathbb{N},\ \frac{}{(\texttt{random}(x),\sigma)\rightarrow\sigma[x\mapsto p]}
+			\text{In big-step, }\forall p\in \mathbb{N},\ \frac{}{(\texttt{random}(x),\sigma)\Rightarrow\sigma[x\mapsto p]}
+		\end{equation*}
+		
+		\begin{equation*}
+			\text{In small-step, }\forall p\in \mathbb{N},\ \frac{}{(\texttt{random}(x),\sigma)\rightarrow\sigma[x\mapsto p]}
 		\end{equation*}
 		
 		We have already seen a statement that produces an arbitrary natural number in big-step semantics. Therefore, when considering big-step semantics, \texttt{random($x$)} appears redundant.
 		
 		However, to show that \texttt{random($x$)} is redundant in small-step semantics, there needs to be a small-step transition that produces a random natural number without the risk of an endless loop. This is not possible using the \texttt{or} construct.
 		
-		The \texttt{or} construct effectively creates a binary tree, in which leaves are final states and nodes lead to more possible final states. Since there are infinite natural numbers, a function that returns a random natural number must have infinite final states. Therefore, this function is represented by an infinite binary tree, which according to König's Lemma, always has an infinite path (that cannot be represented using small-step semantics).
-						
-	\item 
+		Without the \texttt{random($x$)} function, the \texttt{or} construct is the only way to achieve nondeterminism in the While language. However, an \texttt{or} construct within a \texttt{while} loop effectively creates a binary tree, in which leaves are final states and nodes lead to more possible final states. Since there are infinite natural numbers, a statement that returns an arbitrary natural number must have infinite final states. Therefore, in small-step semantics, such a statement is represented by an infinite binary tree, which according to K\"onig's Lemma, always has an infinite path, making the statement not equivalent to \texttt{random($x$)}, which guarantees a final state is reached.
+		
+	\item The denotational semantics for \texttt{while $x\geq 0$ do $skip$} are as follows:
 	\begin{equation*}
 		g=\llbracket while\ x\geq 0\ do\ skip\rrbracket
 	\end{equation*}
@@ -130,15 +137,23 @@
 		F_{x\geq 0,skip}(g)(\sigma) = \begin{cases}\sigma\texttt{, if }\sigma(x)<0 \\ \bot\texttt{, if }\sigma(x) \geq 0\end{cases}
 	\end{equation*}
 	
+	Consider a function $g_\bot$ such that $g_\bot(\sigma) = \bot$. Then:
+	\begin{equation*}
+		F_{x\geq 0,skip}(g_\bot) = cond(eval(x\geq0,-),g_\bot,id)
+	\end{equation*}
+	\begin{equation*}
+		F_{x\geq 0,skip}(g_\bot)(\sigma) = \begin{cases}\sigma\texttt{, if }\sigma(x)<0 \\ g_\bot(\sigma) = \bot\texttt{, if }\sigma(x) \geq 0\end{cases}
+	\end{equation*}
+	
 	\item 
 	\begin{equation*}
-		g=\llbracket repeat\ S\ until\ b\rrbracket=\llbracket while\ !b\ do\ S\rrbracket\circ \llbracket S\rrbracket
+		g=\llbracket repeat\ S\ until\ b\rrbracket=(FIX\ F_{!b,S})\circ \llbracket S\rrbracket
 	\end{equation*}
 	\begin{equation*}
-		\llbracket repeat\ S\ until\ b\rrbracket=cond(eval(!b,-), g, id)\circ \llbracket S\rrbracket
+		F_{!b,S}(g)=cond(eval(!b,-), g, id)
 	\end{equation*}
 	\begin{equation*}
-		\llbracket repeat\ S\ until\ b] = \begin{cases}\llbracket S\rrbracket\texttt{, if }eval(b)=false \\ \llbracket repeat\ S\ until\ b\rrbracket\circ \llbracket S\rrbracket\texttt{, if }eval(b)=true\end{cases}
+		F_{!b,S}(g)(\sigma) = \begin{cases}\sigma\texttt{, if }eval(b)=true\\ \bot\texttt{, if }eval(b)=false\end{cases}
 	\end{equation*}
 		
 	\end{enumerate}
