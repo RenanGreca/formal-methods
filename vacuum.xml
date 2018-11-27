@@ -57,25 +57,29 @@ int rules[3][3][4] = {
                         }
                      };
 
+// channels for syncing with the Room model
 chan ch_forward;
 chan ch_turn;
 
+// clocks for simulating slow actions and counting time
 clock ck;
 clock time := 0.0;
 
-
+// auxiliary size values
 typedef int[0,2] count;
+int size = 3;
+
 // 2D array to know which spaces have been visited - indexed as [y][x]
 int room [3][3] = {{1, 1, 1},
                    {1, 1, 1},
                    {1, 1, 1}};
 
-int size = 3;
-
+// The robot's current position and direction
 int x = 0;
 int y = 0;
 int d = n;
 
+// put hardcoded rules into the matrix here
 void preset_rules() {
     rules[0][0][n] = a_forward;
     //rules[1][0][n] = a_forward;
@@ -83,10 +87,12 @@ void preset_rules() {
     //rules[2][0][e] = a_forward;
 }
 
+// shorthand for queries
 bool completed_cycle() {
     return x == 0 &amp;&amp; y == 0 &amp;&amp; d == n &amp;&amp; b_is_clean;
 }
 
+// checks if turn is a legal action
 bool can_turn() {
     if (completed_cycle()) {
         return false;
@@ -98,6 +104,7 @@ bool can_turn() {
 	return false;
 }
 
+// checks if forward is a legal action
 bool can_move_forward() {
     if (completed_cycle()) {
         return false;
@@ -123,6 +130,7 @@ bool can_move_forward() {
     return true;
 }
 
+// updates the robot's position
 void forward() {
     rules[y][x][d] = a_forward;    
 
@@ -138,12 +146,14 @@ void forward() {
 
 }
 
+// updates the robot's direction
 void turn() {
     rules[y][x][d] = a_turn;
 
     d = (d+1) % 4;
 }
 
+// checks if all spaces have been visited
 bool is_clean() {
     for (i: count) {
         for (j: count) {
