@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><pnml>
+<net id="Net-One" type="P/T net">
+<token id="Default" enabled="true" red="0" green="0" blue="0"/>
+<place id="AM">
+<graphics>
+<position x="385.0" y="150.0"/>
+</graphics>
+<name>
+<value>AM</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="DEM">
+<graphics>
+<position x="385.0" y="270.0"/>
+</graphics>
+<name>
+<value>DEM</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Metrics">
+<graphics>
+<position x="550.0" y="210.0"/>
+</graphics>
+<name>
+<value>Metrics</value>
+<graphics>
+<offset x="26.0" y="-12.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Optimization opportunities">
+<graphics>
+<position x="860.0" y="210.0"/>
+</graphics>
+<name>
+<value>Optimization opportunities</value>
+<graphics>
+<offset x="85.49999999999999" y="-10.666666666666664"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Prioritized methods">
+<graphics>
+<position x="705.0" y="210.0"/>
+</graphics>
+<name>
+<value>Prioritized methods</value>
+<graphics>
+<offset x="32.0" y="-14.166666666666666"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="SCM">
+<graphics>
+<position x="385.0" y="210.0"/>
+</graphics>
+<name>
+<value>SCM</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Source Code">
+<graphics>
+<position x="60.0" y="210.0"/>
+</graphics>
+<name>
+<value>Source Code</value>
+<graphics>
+<offset x="34.833333333333336" y="-16.166666666666668"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,1</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Titan">
+<graphics>
+<position x="217.5" y="150.0"/>
+</graphics>
+<name>
+<value>Titan</value>
+<graphics>
+<offset x="24.666666666666675" y="-6.166666666666665"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="Understand">
+<graphics>
+<position x="217.5" y="210.0"/>
+</graphics>
+<name>
+<value>Understand</value>
+<graphics>
+<offset x="45.16666666666668" y="-7.000000000000001"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<place id="YourKit">
+<graphics>
+<position x="217.5" y="270.0"/>
+</graphics>
+<name>
+<value>YourKit</value>
+<graphics>
+<offset x="34.33333333333333" y="-5.833333333333334"/>
+</graphics>
+</name>
+<initialMarking>
+<value>Default,0</value>
+<graphics>
+<offset x="0.0" y="0.0"/>
+</graphics>
+</initialMarking>
+<capacity>
+<value>0</value>
+</capacity>
+</place>
+<transition id="Begin metric computation">
+<graphics>
+<position x="137.5" y="210.0"/>
+</graphics>
+<name>
+<value>Begin metric computation</value>
+<graphics>
+<offset x="58.0" y="63.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Computing AM">
+<graphics>
+<position x="302.5" y="150.0"/>
+</graphics>
+<name>
+<value>Computing AM</value>
+<graphics>
+<offset x="56.66666666666666" y="40.83333333333334"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Computing DEM">
+<graphics>
+<position x="302.5" y="267.5"/>
+</graphics>
+<name>
+<value>Computing DEM</value>
+<graphics>
+<offset x="60.000000000000014" y="44.16666666666668"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0E-4</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Computing SCM">
+<graphics>
+<position x="302.5" y="210.0"/>
+</graphics>
+<name>
+<value>Computing SCM</value>
+<graphics>
+<offset x="60.833333333333336" y="44.16666666666668"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>0.9992</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Method priotization">
+<graphics>
+<position x="627.5" y="210.0"/>
+</graphics>
+<name>
+<value>Method priotization</value>
+<graphics>
+<offset x="58.0" y="59.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>0.9998</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Metric aggregation">
+<graphics>
+<position x="472.5" y="210.0"/>
+</graphics>
+<name>
+<value>Metric aggregation</value>
+<graphics>
+<offset x="74.16666666666666" y="54.833333333333336"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>1.0</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<transition id="Optimization space localization">
+<graphics>
+<position x="782.5" y="210.0"/>
+</graphics>
+<name>
+<value>Optimization space localization</value>
+<graphics>
+<offset x="101.0" y="63.0"/>
+</graphics>
+</name>
+<orientation>
+<value>0</value>
+</orientation>
+<rate>
+<value>0.9957</value>
+</rate>
+<timed>
+<value>true</value>
+</timed>
+<infiniteServer>
+<value>false</value>
+</infiniteServer>
+<priority>
+<value>1</value>
+</priority>
+</transition>
+<arc id="AM to Metric aggregation" source="AM" target="Metric aggregation">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="410" y="170" curvePoint="false"/>
+<arcpath id="001" x="480" y="216" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Begin metric computation to AM" source="Begin metric computation" target="Titan">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="155" y="214" curvePoint="false"/>
+<arcpath id="001" x="217" y="170" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Begin metric computation to DEM" source="Begin metric computation" target="YourKit">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="154" y="228" curvePoint="false"/>
+<arcpath id="001" x="217" y="273" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Begin metric computation to SCM" source="Begin metric computation" target="Understand">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="155" y="221" curvePoint="false"/>
+<arcpath id="001" x="215" y="221" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Computing AM to AM" source="Computing AM" target="AM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="319" y="162" curvePoint="false"/>
+<arcpath id="001" x="382" y="162" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Computing DEM to DEM" source="Computing DEM" target="DEM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="319" y="280" curvePoint="false"/>
+<arcpath id="001" x="382" y="281" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Computing SCM to SCM" source="Computing SCM" target="SCM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="319" y="222" curvePoint="false"/>
+<arcpath id="001" x="382" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="DEM to Metric aggregation" source="DEM" target="Metric aggregation">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="410" y="274" curvePoint="false"/>
+<arcpath id="001" x="479" y="230" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="End metric computation to Metrics" source="Metric aggregation" target="Metrics">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="489" y="222" curvePoint="false"/>
+<arcpath id="001" x="547" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Method priotization to Prioritized methods" source="Method priotization" target="Prioritized methods">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="644" y="222" curvePoint="false"/>
+<arcpath id="001" x="702" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Metrics to Method priotization" source="Metrics" target="Method priotization">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="576" y="222" curvePoint="false"/>
+<arcpath id="001" x="634" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Optimization space localization to Optimization opportunities" source="Optimization space localization" target="Optimization opportunities">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="799" y="222" curvePoint="false"/>
+<arcpath id="001" x="857" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Prioritized methods to Optimization space localization" source="Prioritized methods" target="Optimization space localization">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="731" y="222" curvePoint="false"/>
+<arcpath id="001" x="789" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="SCM to Metric aggregation" source="SCM" target="Metric aggregation">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="411" y="222" curvePoint="false"/>
+<arcpath id="001" x="479" y="224" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Source Code to Begin metric computation" source="Source Code" target="Begin metric computation">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="86" y="222" curvePoint="false"/>
+<arcpath id="001" x="144" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Titan to Computing AM" source="Titan" target="Computing AM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="244" y="162" curvePoint="false"/>
+<arcpath id="001" x="309" y="162" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="Understand to Computing SCM" source="Understand" target="Computing SCM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="244" y="222" curvePoint="false"/>
+<arcpath id="001" x="309" y="222" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+<arc id="YourKit to Computing DEM" source="YourKit" target="Computing DEM">
+<graphics/>
+<inscription>
+<value>Default,1</value>
+<graphics/>
+</inscription>
+<tagged>
+<value>false</value>
+</tagged>
+<arcpath id="000" x="244" y="281" curvePoint="false"/>
+<arcpath id="001" x="309" y="280" curvePoint="false"/>
+<type value="normal"/>
+</arc>
+</net>
+</pnml>
